@@ -31,7 +31,7 @@ class Teacher(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     gender = models.CharField(max_length=1, choices=GenderEnum.choices)
-    classrooms = models.ManyToManyField(Classroom)
+    classrooms = models.ManyToManyField(Classroom, related_name='teachers')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -43,7 +43,7 @@ class Student(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     gender = models.CharField(max_length=1, choices=GenderEnum.choices)
-    classroom = models.ForeignKey(Classroom, models.DO_NOTHING)
+    classroom = models.ForeignKey(Classroom, models.DO_NOTHING, related_name='students')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

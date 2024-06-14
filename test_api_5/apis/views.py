@@ -18,9 +18,18 @@ class SchoolViewSet(viewsets.GenericViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status.HTTP_200_OK)
     
-    def retreive(self, request, id):
+    def retrieve(self, request, id):
         school = self.get_object()
-        return Response()
+        serializer = self.get_serializer(school)
+        
+        classrooms = Classroom.objects.filter(school=school)
+        teachers = Teacher.objects.filter(classrooms__school=school)
+        students = Student.objects.filter(classroom__school=school)
+        res = serializer.data
+        res['count_of_classroom'] = len(classrooms)
+        res['count_of_teacher'] = len(teachers)
+        res['count_of_students'] = len(students)
+        return Response(res, status.HTTP_200_OK)
     
     def update(self, request, id):
         school = self.get_object()
@@ -55,13 +64,20 @@ class ClassroomViewset(viewsets.GenericViewSet):
         'school__name': ['icontains', 'exact']
     }
 
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return ClassroomDetailSerializer
+        return ClassroomSerializer
+
     def list(self, request):
         queryset = self.filter_queryset(self.get_queryset())
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status.HTTP_200_OK)
     
-    def retreive(self, request, id):
-        return Response()
+    def retrieve(self, request, id):
+        school = self.get_object()
+        serializer = self.get_serializer(school)
+        return Response(serializer.data, status.HTTP_200_OK)
     
     def update(self, request, id):
         school = self.get_object()

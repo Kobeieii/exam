@@ -38,3 +38,11 @@ class StudentDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         exclude = ['created_at', 'updated_at']
+
+class ClassroomDetailSerializer(serializers.ModelSerializer):
+    teachers = TeacherSerializer(many=True)
+    students = StudentSerializer(many=True)
+
+    class Meta:
+        model = Classroom
+        exclude = ['created_at', 'updated_at']
